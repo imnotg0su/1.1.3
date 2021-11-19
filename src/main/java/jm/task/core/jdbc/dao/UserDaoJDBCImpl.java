@@ -10,8 +10,8 @@ import java.util.List;
 public class UserDaoJDBCImpl implements UserDao {
 
     public void createUsersTable() {
-        try(PreparedStatement ps = new Util().getConnection().prepareStatement("CREATE TABLE User (id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT, " +
-                "name VARCHAR (45), lastName VARCHAR (45), age TINYINT")) {
+        String s = "CREATE TABLE User (id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT, name VARCHAR (45), lastName VARCHAR (45), age TINYINT)";
+        try(PreparedStatement ps = new Util().getConnection().prepareStatement(s)) {
             ps.executeUpdate();
             System.out.println("Таблица создана.");
         } catch (SQLException e) {
@@ -34,7 +34,7 @@ public class UserDaoJDBCImpl implements UserDao {
             ps.setString(2, lastName);
             ps.setByte(3, age);
             ps.execute();
-            System.out.println("User с именем – " + name + "добавлен в базу данных");
+            System.out.println("User с именем – " + name + " добавлен в базу данных");
         } catch (SQLException e) {
             System.err.println("Пользователь не сохранён" + e);
         }
@@ -60,7 +60,7 @@ public class UserDaoJDBCImpl implements UserDao {
         } catch (SQLException e) {
             System.err.println("Ошибка получения списка пользователей" + e);
         }
-        return null;
+        return list;
     }
 
     public void cleanUsersTable() {
