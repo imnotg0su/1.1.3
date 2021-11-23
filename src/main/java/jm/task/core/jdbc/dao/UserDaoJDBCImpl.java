@@ -12,7 +12,7 @@ public class UserDaoJDBCImpl implements UserDao {
     public void createUsersTable() {
         String s = "CREATE TABLE User (id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT, name VARCHAR (45), lastName VARCHAR (45), age TINYINT)";
         try(PreparedStatement ps = new Util().getConnection().prepareStatement(s)) {
-            ps.executeUpdate();
+            ps.executeUpdate(s);
             System.out.println("Таблица создана.");
         } catch (SQLException e) {
             System.err.println("Ошибка в создании таблицы" + e);
@@ -20,8 +20,8 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void dropUsersTable() {
-        try(PreparedStatement ps = new Util().getConnection().prepareStatement("DROP TABLE User")) {
-            ps.executeUpdate();
+        try(PreparedStatement ps = new Util().getConnection().prepareStatement("DROP TABLE IF EXISTS User")) {
+            ps.executeUpdate("DROP TABLE IF EXISTS User");
             System.out.println("Таблица удалена.");
         } catch (SQLException e) {
             System.err.println("Ошибка удаления таблицы" + e);
@@ -53,7 +53,7 @@ public class UserDaoJDBCImpl implements UserDao {
     public List<User> getAllUsers() {
         List<User> list = new ArrayList<>();
         try (PreparedStatement ps = new Util().getConnection().prepareStatement("SELECT * FROM User")) {
-            ResultSet rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery("SELECT * FROM User");
             while (rs.next()) {
                 User user = new User();
                 user.setId(rs.getLong("id"));
@@ -61,6 +61,7 @@ public class UserDaoJDBCImpl implements UserDao {
                 user.setLastName(rs.getString("lastName"));
                 user.setAge(rs.getByte("age"));
                 list.add(user);
+
             }
         } catch (SQLException e) {
             System.err.println("Ошибка получения списка пользователей" + e);
